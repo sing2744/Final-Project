@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <meta
+    name="description"
+    content="Game Backlog Tracker website"
+  />
+  <title>Game Backlog Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+  <header class="site-header">
+    <div class="nav-container">
+
+      <button
+        class="logo"
+        type="button"
+        data-view="dashboard"
+      >
+        <span class="logo-main">GAME BACKLOG</span>
+        <span class="logo-small">TRACKER</span>
+      </button>
+
+      <button
+        class="menu-button"
+        id="menuButton"
+        type="button"
+        aria-label="Toggle menu"
+      >
+        ☰
+      </button>
+
+      <nav class="main-nav" id="mainNav">
+        <button class="nav-link active" type="button" data-view="dashboard">
+          Dashboard
+        </button>
+
+        <button class="nav-link" type="button" data-view="games">
+          All Games
+        </button>
+
+        <button class="nav-link" type="button" data-view="form">
+          Add Game
+        </button>
+
+        <button class="nav-link" type="button" data-view="random">
+          Random Picker
+        </button>
+
+        <button class="nav-link" type="button" data-view="stats">
+          Statistics
+        </button>
+      </nav>
+
+      <div class="profile-avatar" aria-hidden="true">
+        <div class="avatar-head"></div>
+        <div class="avatar-body"></div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- =========================
+       MAIN
+  ========================== -->
+  <main class="container">
+
+    <!-- =========================
+         DASHBOARD
+    ========================== -->
+    <section class="page active" id="dashboardPage">
+      <div class="page-header">
+        <div>
+          <p class="page-tag">YOUR COLLECTION</p>
+          <h1>Dashboard</h1>
+          <p class="page-description">
+            Track your library, progress, and what to play next.
+          </p>
+        </div>
+
+        <button
+          class="primary-button"
+          type="button"
+          id="dashboardAddButton"
+        >
+          + Add Game
+        </button>
+      </div>
+
+      <div class="stats-grid" id="dashboardStats"></div>
+
+      <div class="dashboard-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-tag">IN PROGRESS</p>
+              <h2>Currently Playing</h2>
+            </div>
+
+            <button class="text-button" type="button" data-view="games">
+              View All
+            </button>
+          </div>
+
+          <div class="playing-list" id="playingList"></div>
+        </div>
+
+        <div class="panel quick-picker-panel">
+          <p class="section-tag">CAN'T DECIDE?</p>
+          <h2>Quick Random Picker</h2>
+          <p class="muted-text">
+            Pick one unfinished game from your backlog.
+          </p>
+
+          <div class="quick-result" id="quickResult">
+            <div class="question-mark">?</div>
+          </div>
+
+          <button
+            class="primary-button full-button"
+            type="button"
+            id="quickPickButton"
+          >
+            Pick a Game
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================
+         ALL GAMES
+    ========================== -->
+    <section class="page" id="gamesPage">
+      <div class="page-header">
+        <div>
+          <p class="page-tag">YOUR LIBRARY</p>
+          <h1>All Games</h1>
+          <p class="page-description">
+            Search, filter, edit, and manage your collection.
+          </p>
+        </div>
+
+        <button
+          class="primary-button"
+          type="button"
+          id="gamesAddButton"
+        >
+          + Add Game
+        </button>
+      </div>
+
+      <div class="filter-panel">
+        <div class="field search-field">
+          <label for="searchInput">Search</label>
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Search by title..."
+          />
+        </div>
+
+        <div class="field">
+          <label for="platformFilter">Platform</label>
+          <select id="platformFilter">
+            <option value="all">All Platforms</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="genreFilter">Genre</label>
+          <select id="genreFilter">
+            <option value="all">All Genres</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="statusFilter">Status</label>
+          <select id="statusFilter">
+            <option value="all">All Statuses</option>
+            <option value="Want to Play">Want to Play</option>
+            <option value="Currently Playing">Currently Playing</option>
+            <option value="Completed">Completed</option>
+            <option value="Dropped">Dropped</option>
+          </select>
+        </div>
+
+        <button
+          class="secondary-button clear-button"
+          type="button"
+          id="clearFiltersButton"
+        >
+          Clear
+        </button>
+      </div>
+
+      <div class="library-header">
+        <h2>Game Library</h2>
+        <span class="game-count" id="gameCount">0 games</span>
+      </div>
+
+      <div class="games-grid" id="gamesGrid"></div>
+    </section>
+
+
+    <!-- =========================
+         FORM
+    ========================== -->
+    <section class="page" id="formPage">
+      <div class="page-header">
+        <div>
+          <p class="page-tag">GAME DETAILS</p>
+          <h1 id="formTitle">Add Game</h1>
+          <p class="page-description" id="formDescription">
+            Add a new game to your backlog.
+          </p>
+        </div>
+      </div>
+
+      <form class="game-form" id="gameForm" novalidate>
+        <input type="hidden" id="editGameId" />
+
+        <div class="form-grid">
+          <div class="field full-field">
+            <label for="titleInput">Game Title *</label>
+            <input
+              id="titleInput"
+              type="text"
+              maxlength="80"
+              placeholder="Example: Elden Ring"
+            />
+            <small class="error-message" id="titleError"></small>
+          </div>
+
+          <div class="field">
+            <label for="platformInput">Platform *</label>
+            <input
+              id="platformInput"
+              type="text"
+              list="platformOptions"
+              placeholder="Select or type platform"
+            />
+            <datalist id="platformOptions">
+              <option value="PlayStation 5"></option>
+              <option value="PlayStation 4"></option>
+              <option value="Xbox Series X|S"></option>
+              <option value="Xbox One"></option>
+              <option value="PC"></option>
+              <option value="Nintendo Switch"></option>
+              <option value="Steam Deck"></option>
+            </datalist>
+            <small class="error-message" id="platformError"></small>
+          </div>
+
+          <div class="field">
+            <label for="genreInput">Genre *</label>
+            <input
+              id="genreInput"
+              type="text"
+              list="genreOptions"
+              placeholder="Select or type genre"
+            />
+            <datalist id="genreOptions">
+              <option value="Action"></option>
+              <option value="Adventure"></option>
+              <option value="RPG"></option>
+              <option value="Racing"></option>
+              <option value="Shooter"></option>
+              <option value="Sports"></option>
+              <option value="Strategy"></option>
+              <option value="Simulation"></option>
+              <option value="Puzzle"></option>
+              <option value="Horror"></option>
+              <option value="Fighting"></option>
+              <option value="Indie"></option>
+            </datalist>
+            <small class="error-message" id="genreError"></small>
+          </div>
+
+          <div class="field">
+            <label for="statusInput">Status *</label>
+            <select id="statusInput">
+              <option value="Want to Play">Want to Play</option>
+              <option value="Currently Playing">Currently Playing</option>
+              <option value="Completed">Completed</option>
+              <option value="Dropped">Dropped</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="ratingInput">Personal Rating</label>
+            <select id="ratingInput">
+              <option value="0">Not Rated</option>
+              <option value="1">1 / 5</option>
+              <option value="2">2 / 5</option>
+              <option value="3">3 / 5</option>
+              <option value="4">4 / 5</option>
+              <option value="5">5 / 5</option>
+            </select>
+          </div>
+
+          <div class="field full-field">
+            <label for="imageInput">Image URL (optional)</label>
+            <input
+              id="imageInput"
+              type="url"
+              placeholder="Paste an image URL or leave blank"
+            />
+            <p class="form-help">
+              If you leave this empty, the website will create a cover image automatically.
+            </p>
+          </div>
+
+          <div class="field full-field">
+            <div class="progress-label">
+              <label for="progressInput">Progress</label>
+              <strong id="progressValue">0%</strong>
+            </div>
+
+            <input
+              class="progress-slider"
+              id="progressInput"
+              type="range"
+              min="0"
+              max="100"
+              value="0"
+            />
+
+            <p class="form-help">
+              Completed games automatically become 100%.
+            </p>
+          </div>
+        </div>
+
+        <div class="form-buttons">
+          <button
+            class="secondary-button"
+            type="button"
+            id="cancelButton"
+          >
+            Cancel
+          </button>
+
+          <button
+            class="primary-button"
+            type="submit"
+            id="saveButton"
+          >
+            Save Game
+          </button>
+        </div>
+      </form>
+    </section>
+
+
+    <!-- =========================
+         RANDOM
+    ========================== -->
+    <section class="page" id="randomPage">
+      <div class="page-header">
+        <div>
+          <p class="page-tag">CAN'T DECIDE?</p>
+          <h1>Random Game Picker</h1>
+          <p class="page-description">
+            Completed and dropped games are not included.
+          </p>
+        </div>
+      </div>
+
+      <div class="random-panel">
+        <div class="random-icon">?</div>
+
+        <h2>What should you play next?</h2>
+
+        <p class="muted-text">
+          Let the tracker choose from your unfinished backlog.
+        </p>
+
+        <div class="random-result" id="randomResult">
+          <strong>No game selected yet.</strong>
+          <span>Click the button below.</span>
+        </div>
+
+        <button
+          class="primary-button random-button"
+          type="button"
+          id="randomPickButton"
+        >
+          Pick a Random Game
+        </button>
+      </div>
+    </section>
+
+
+    <!-- =========================
+         STATISTICS
+    ========================== -->
+    <section class="page" id="statsPage">
+      <div class="page-header">
+        <div>
+          <p class="page-tag">YOUR PROGRESS</p>
+          <h1>Statistics</h1>
+          <p class="page-description">
+            View a breakdown of your collection.
+          </p>
+        </div>
+      </div>
+
+      <div class="stats-grid" id="statisticsCards"></div>
+
+      <div class="statistics-grid">
+        <div class="panel">
+          <p class="section-tag">STATUS</p>
+          <h2>Backlog Breakdown</h2>
+          <div class="status-bars" id="statusBreakdown"></div>
+        </div>
+
+        <div class="panel">
+          <p class="section-tag">PLATFORMS</p>
+          <h2>Games by Platform</h2>
+          <div class="platform-list" id="platformBreakdown"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <!-- =========================
+       DELETE MODAL
+  ========================== -->
+  <div class="modal-background hidden" id="deleteModal">
+    <div class="modal">
+      <div class="delete-icon">!</div>
+      <h2>Delete this game?</h2>
+      <p>This will remove the game from your collection.</p>
+
+      <div class="modal-buttons">
+        <button
+          class="secondary-button"
+          type="button"
+          id="cancelDeleteButton"
+        >
+          Cancel
+        </button>
+
+        <button
+          class="danger-button"
+          type="button"
+          id="confirmDeleteButton"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================
+       TOAST
+  ========================== -->
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
